@@ -14,6 +14,7 @@ func main() {
 		fmt.Println("index: ", i)
 		fmt.Println("arg: " + arg)
 	}
+	fmt.Println(s)
 	fmt.Println(os.Args[0])
 	fmt.Println(strings.Join(os.Args[1:], " "))
 }
