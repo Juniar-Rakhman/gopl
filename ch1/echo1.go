@@ -1,14 +1,14 @@
 package main
 
 import (
-	"os"
 	"fmt"
+	"os"
 	"strings"
 )
 
 func main() {
-	s, sep := "",""
-	for i, arg := range os.Args[1:]{
+	s, sep := "", ""
+	for i, arg := range os.Args[1:] {
 		s += sep + arg
 		sep = " "
 		fmt.Println("index: ", i)
