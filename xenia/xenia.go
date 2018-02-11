@@ -31,6 +31,19 @@ type System struct {
 	Pillar
 }
 
+type Puller interface {
+	pull(*Data) error
+}
+
+type Storer interface {
+	store(*Data) error
+}
+
+type PullStorer interface {
+	Puller
+	Storer
+}
+
 func (*Xenia) pull(d *Data) error {
 	switch rand.Intn(10) {
 	case 1, 9:
@@ -49,34 +62,34 @@ func (*Pillar) store(d *Data) error {
 	return nil
 }
 
-func pull(x *Xenia, data []Data) (int, error) {
+func pull(p Puller, data []Data) (int, error) {
 	for i := range data {
-		if err := x.pull(&data[i]); err != nil {
+		if err := p.pull(&data[i]); err != nil {
 			return i, err
 		}
 	}
 	return len(data), nil
 }
 
-func store(p *Pillar, data []Data) (int, error) {
+func store(s Storer, data []Data) (int, error) {
 	for i := range data {
-		if err := p.store(&data[i]); err != nil {
+		if err := s.store(&data[i]); err != nil {
 			return i, err
 		}
 	}
 	return len(data), nil
 }
 
-func copy(s *System, batch int) error {
+func copy(ps PullStorer, batch int) error {
 	data := make([]Data, batch)
 
 	for {
-		i, err := pull(&s.Xenia, data)
+		i, err := pull(ps, data)
 		if err != nil {
 			return err
 		}
 		if i > 0 {
-			if store(&s.Pillar, data[:i]); err != nil {
+			if store(ps, data[:i]); err != nil {
 				return err
 			}
 		}
