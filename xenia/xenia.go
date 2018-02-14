@@ -26,9 +26,14 @@ type Pillar struct {
 	Timeout time.Duration
 }
 
+type Fiqs struct {
+	Host    string
+	Timeout time.Duration
+}
+
 type System struct {
-	Xenia
-	Pillar
+	Puller
+	Storer
 }
 
 type Puller interface {
@@ -39,13 +44,18 @@ type Storer interface {
 	store(*Data) error
 }
 
+type Oracle struct {
+	Host    string
+	Timeout time.Duration
+}
+
 type PullStorer interface {
 	Puller
 	Storer
 }
 
 func (*Xenia) pull(d *Data) error {
-	switch rand.Intn(10) {
+	switch rand.Intn(20) {
 	case 1, 9:
 		return io.EOF
 	case 5:
@@ -59,6 +69,24 @@ func (*Xenia) pull(d *Data) error {
 
 func (*Pillar) store(d *Data) error {
 	fmt.Println("Out:", d.Line)
+	return nil
+}
+
+func (*Fiqs) pull(d *Data) error {
+	switch rand.Intn(20) {
+	case 1:
+		return io.EOF
+	case 5:
+		return errors.New("Error reading data from Fiqs")
+	default:
+		d.Line = "Data from fiqs"
+		fmt.Println("In: ", d.Line)
+		return nil
+	}
+}
+
+func (*Oracle) store(d *Data) error {
+	fmt.Println("Storing data to oracle:", d.Line)
 	return nil
 }
 
@@ -80,35 +108,58 @@ func store(s Storer, data []Data) (int, error) {
 	return len(data), nil
 }
 
-func copy(ps PullStorer, batch int) error {
+func copyDB(ps PullStorer, batch int) error {
 	data := make([]Data, batch)
 
 	for {
 		i, err := pull(ps, data)
-		if err != nil {
-			return err
-		}
+
+		fmt.Println("Number of data to copy : ", i)
+
 		if i > 0 {
-			if store(ps, data[:i]); err != nil {
+			if _, err := store(ps, data[:i]); err != nil {
 				return err
 			}
+		}
+
+		if err != nil {
+			return err
 		}
 	}
 }
 
 func main() {
 	sys := System{
-		Xenia: Xenia{
+		Puller: &Xenia{
 			Host:    "localhost:8000",
 			Timeout: time.Second,
 		},
-		Pillar: Pillar{
+		Storer: &Pillar{
 			Host:    "localhost:9000",
 			Timeout: time.Second,
 		},
 	}
 
-	if err := copy(&sys, 3); err != io.EOF {
+	if err := copyDB(&sys, 10); err != io.EOF {
 		fmt.Println(err)
 	}
+
+	fmt.Println("====== Copy from xenia to pillar done =====")
+
+	sys2 := System{
+		Puller: &Fiqs{
+			Host:    "localhost:8000",
+			Timeout: time.Second,
+		},
+		Storer: &Oracle{
+			Host:    "localhost:9000",
+			Timeout: time.Second,
+		},
+	}
+
+	if err := copyDB(&sys2, 10); err != io.EOF {
+		fmt.Println(err)
+	}
+
+
 }
