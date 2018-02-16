@@ -72,7 +72,7 @@ func (*Pillar) store(d *Data) error {
 	return nil
 }
 
-func (*Fiqs) pull(d *Data) error {
+func (Fiqs) pull(d *Data) error {
 	switch rand.Intn(20) {
 	case 1:
 		return io.EOF
@@ -85,7 +85,7 @@ func (*Fiqs) pull(d *Data) error {
 	}
 }
 
-func (*Oracle) store(d *Data) error {
+func (Oracle) store(d *Data) error {
 	fmt.Println("Storing data to oracle:", d.Line)
 	return nil
 }
@@ -161,5 +161,39 @@ func main() {
 		fmt.Println(err)
 	}
 
+	fmt.Println("====== Copy from fiqs to oracle done =====")
 
+	var ps PullStorer
+	var p Puller
+	//var s Storer
+	var xs Storer
+
+	ps = System{
+		Puller: Fiqs{
+			Host:    "localhost:8000",
+			Timeout: time.Second,
+		}}
+
+	p = ps
+	//s = ps
+
+	xs = Oracle{
+		Host:    "127.0.0.1:9000",
+		Timeout: time.Second,
+	}
+
+	//wont work. there is no guarante that p implements storer
+	//ps = p
+
+	if system, ok := p.(System); ok {
+		fmt.Println(system)
+	}
+
+	if puller, ok := xs.(Puller); ok {
+		fmt.Println(puller)
+	}
+
+	if storer, ok := xs.(Storer); ok {
+		fmt.Println(storer)
+	}
 }
