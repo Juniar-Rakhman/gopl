@@ -1,5 +1,7 @@
 package pubsub
 
+import "fmt"
+
 // PubSub provides access to a queue system.
 type PubSub struct {
 	host string
@@ -20,7 +22,16 @@ func New(host string) *PubSub {
 
 // Publish sends the data for the specified key.
 func (ps *PubSub) Publish(key string, v interface{}) error {
+	fmt.Println(ps.host)
+	fmt.Println(key)
+	// PRETEND THERE IS A SPECIFIC IMPLEMENTATION.
+	return nil
+}
 
+// Subscribe sets up an request to receive messages for the specified key.
+func (ps *PubSub) Subscribe(key string) error {
+	fmt.Println(ps.host)
+	fmt.Println(key)
 	// PRETEND THERE IS A SPECIFIC IMPLEMENTATION.
 	return nil
 }

@@ -1,6 +1,9 @@
 package main
 
-import "mock/pubsub"
+import (
+	"./pubsub"
+	"fmt"
+)
 
 // publisher is an interface to allow this package to mock the pubsub
 // package support.
@@ -10,18 +13,22 @@ type publisher interface {
 }
 
 // mock is a concrete type to help support the mocking of the pubsub package.
-type mock struct{}
+type mock struct {
+	host string
+}
 
 // Publish implements the publisher interface for the mock.
 func (m *mock) Publish(key string, v interface{}) error {
-
+	fmt.Println(m.host)
+	fmt.Println(key)
 	// ADD YOUR MOCK FOR THE PUBLISH CALL.
 	return nil
 }
 
 // Subscribe implements the publisher interface for the mock.
 func (m *mock) Subscribe(key string) error {
-
+	fmt.Println(m.host)
+	fmt.Println(key)
 	// ADD YOUR MOCK FOR THE SUBSCRIBE CALL.
 	return nil
 }
@@ -33,14 +40,14 @@ func main() {
 	// a mock value.
 	pubs := []publisher{
 		pubsub.New("localhost"),
-		&mock{},
+		&mock{"mocking localhost"},
 	}
 
 	// Range over the interface value to see how the publisher
 	// interface provides the level of decoupling the user needs.
 	// The pubsub package did not need to provide the interface type.
 	for _, p := range pubs {
-		p.Publish("key", "value")
-		p.Subscribe("key")
+		p.Publish("pub key", "pub value")
+		p.Subscribe("sub key")
 	}
 }
