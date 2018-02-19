@@ -2,6 +2,7 @@ package main
 
 import (
 	"./pubsub"
+	"errors"
 	"fmt"
 )
 
@@ -21,8 +22,10 @@ type mock struct {
 func (m *mock) Publish(key string, v interface{}) error {
 	fmt.Println(m.host)
 	fmt.Println(key)
+
+	err := errors.New("Bad call")
 	// ADD YOUR MOCK FOR THE PUBLISH CALL.
-	return nil
+	return err
 }
 
 // Subscribe implements the publisher interface for the mock.
