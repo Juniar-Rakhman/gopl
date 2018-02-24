@@ -31,6 +31,11 @@ type Fiqs struct {
 	Timeout time.Duration
 }
 
+type Oracle struct {
+	Host    string
+	Timeout time.Duration
+}
+
 type System struct {
 	Puller
 	Storer
@@ -42,11 +47,6 @@ type Puller interface {
 
 type Storer interface {
 	store(*Data) error
-}
-
-type Oracle struct {
-	Host    string
-	Timeout time.Duration
 }
 
 type PullStorer interface {
