@@ -3,6 +3,9 @@
   <component name="Encoding">
     <file url="PROJECT" charset="UTF-8" />
   </component>
+  <component name="GoImports">
+    <option name="importSorting" value="GOIMPORTS" />
+  </component>
   <component name="GradleLocalSettings">
     <option name="modificationStamps">
       <map>
@@ -56,6 +59,7 @@
       <module fileurl="file://$PROJECT_DIR$/gopl.iml" filepath="$PROJECT_DIR$/gopl.iml" />
     </modules>
   </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_9" default="false" />
   <component name="ProjectTasksOptions">
     <TaskOptions isEnabled="true">
       <option name="arguments" value="fmt $FilePath$" />
@@ -81,7 +85,7 @@
         <env name="PATH" value="$GoBinDirs$" />
       </envs>
     </TaskOptions>
-    <TaskOptions isEnabled="false">
+    <TaskOptions isEnabled="true">
       <option name="arguments" value="-w $FilePath$" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" />
