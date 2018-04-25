@@ -9,6 +9,7 @@ package main
 
 import (
 	"fmt"
+	"runtime"
 	"sync"
 )
 
@@ -34,7 +35,7 @@ func main() {
 
 				//yield the thread and be placed back in queue
 				//DO NOT USE THIS IN PRODUCTION
-				//runtime.Gosched()
+				runtime.Gosched()
 
 				// Increment our local value of Counter.
 				value++

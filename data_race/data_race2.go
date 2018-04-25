@@ -29,7 +29,6 @@ func main() {
 			for count := 0; count < 2; count++ {
 				atomic.AddInt64(&ctr, 1)
 			}
-
 			wg.Done()
 		}()
 	}
