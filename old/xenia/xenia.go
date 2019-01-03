@@ -59,7 +59,7 @@ func (*Xenia) pull(d *Data) error {
 	case 1, 9:
 		return io.EOF
 	case 5:
-		return errors.New("Error reading data from xenia")
+		return errors.New("ERROR READING DATA FROM XENIA")
 	default:
 		d.Line = "Data from xenia"
 		fmt.Println("In: ", d.Line)
